@@ -123,6 +123,18 @@
                 }
             })
         })
+        
+        
+        // 本地图片预览
+        $('#exampleInputFile').change(function(){
+            // 生成rl
+            var url=URL.createObjectURL(this.files[0]);
+            // 设置给img的src
+            // 获取前一个兄弟元素
+            // $(this).prev('img').attr('src',url);
+            // 兄弟节点中的img标签
+            $(this).siblings('img').attr('src',url);
+        })
     })
 </script>
 
