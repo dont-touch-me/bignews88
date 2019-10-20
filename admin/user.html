@@ -84,39 +84,42 @@
 
                 // 标签元素的class标记和数据有相同部分
                 // key 对象的键
-                for(var key in backData.data)
-                {   
+                for (var key in backData.data) {
                     // 对象可以点语法，也可以中括号
-                    $('.'+key).val(backData.data[key]);
+                    $('.' + key).val(backData.data[key]);
                 }
 
                 // 单独设置图片
-                $('.user_pic').attr('src',backData.data.userPic);
+                $('.user_pic').attr('src', backData.data.userPic);
 
             }
         })
         // 个人数据修改
-        $('.btn-edit').click(function(e){
+        $('.btn-edit').click(function (e) {
             // 阻止默认行为
             e.preventDefault();
             // 创建formdata
             // formdata需要传入dom对象
             // $('form') jq对象
             // $('form')[0]获取dom对象
-            var data=new FormData($('form')[0]);
+            var data = new FormData($('form')[0]);
             // ajax
             $.ajax({
-                url:BigNew.user_edit,
-                type:'post',
-                data:data,
+                url: BigNew.user_edit,
+                type: 'post',
+                data: data,
                 // 不设置类型
-                contentType:false,
+                contentType: false,
                 // 不处理数据
-                processData:false,
-                success:function(backData)
-                {
+                processData: false,
+                success: function (backData) {
                     console.log(backData);
-                    
+                    // 如果更新成功
+                    if (backData.code == 200) {
+                        // 刷新页面
+                        window.parent.location.reload();
+                    }
+
                 }
             })
         })
