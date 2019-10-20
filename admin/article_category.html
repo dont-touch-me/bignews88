@@ -89,7 +89,7 @@
                 <td>{{$value.slug}}</td>
                 <td class="text-center">
                     <a href="javascript:void(0);" data-toggle="modal" class=" btn btn-info btn-xs">编辑</a>
-                    <a href="javascript:void(0);" class="btn btn-danger btn-xs">删除</a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-xs btn-delete" data-id="{{$value.id}}">删除</a>
                 </td>
             </tr>
 {{/each}}
@@ -121,7 +121,7 @@
                 var slug = $('.cate-slug').val();
                 console.log(name);
                 console.log(slug);
-                
+
                 // ajax
                 $.ajax({
                     url: BigNew.category_add,
@@ -129,13 +129,34 @@
                     data: {
                         name: name,
                         slug: slug,
-                    }, 
+                    },
                     success: function (backData) {
-                        console.log('是'+backData);
+                        console.log(backData);
                         if (backData.code == 201) {
                             // 成功了
                             $('#myModal').modal('hide');
                             getCategoryData();
+                        }
+                    }
+                })
+            })
+
+
+            // 点击删除 
+            $('tbody').on('click', '.btn-delete', function () {
+                // 获取id
+                var id = $(this).attr('data-id');
+                $.ajax({
+                    url: BigNew.category_delete,
+                    type: 'post',
+                    data: { id: id },
+                    success: function (backData) {
+                        console.log(backData);
+                        // 如果删除成功
+                        // 重新获取数据
+                        if (backData.code == 204) {
+                            getCategoryData();
+
                         }
                     }
                 })
