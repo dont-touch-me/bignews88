@@ -54,7 +54,7 @@
                         <th class="text-center" width="100">操作</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="article-tbody">
                     <tr>
                         <td>王积千造统最头</td>
                         <td>杰克</td>
@@ -76,24 +76,56 @@
 <!-- 定义模板 -->
 <script type="text/html" id='cateTem'>
     <!-- 所有分类就一个 固定的 -->
-    <option value="">所有分类</option>
-    {{each data}}
-    <option value="{{$value.id}}">{{$value.name}}</option>
-    {{/each}}
+<option value="">所有分类</option>
+{{each data}}
+<option value="{{$value.id}}">{{$value.name}}</option>
+{{/each}}
 
 </script>
-<script>
-// 调用接口获取文章分类
-$.ajax({
-    url:BigNew.category_list,
-    success:function(backData)
-    {
-        console.log(backData);
-        // 调用模板引擎方法
-        var res=template('cateTem',backData);
-        // 渲染到页面上
-        $('#selCategory').html(res);
-    }
-})
+
+<!-- 定义模板 tr的模板 -->
+<script type="text/html" id="article">
+    {{each data.data}}
+        <tr>
+                <td>{{$value.title}}</td>
+                <td>{{$value.author}}</td>
+                <td>{{$value.category}}</td>
+                <td class="text-center">{{$value.date}}</td>
+                <td class="text-center">{{$value.state}}</td>
+                <td class="text-center" data-id="{{$value.id}}">
+                    <a href="article_edit.html" class="btn btn-default btn-xs">编辑</a>
+                    <a href="javascript:void(0);" class="btn btn-danger btn-xs delete">删除</a>
+                </td>
+        </tr>
+    {{/each}}
 </script>
+<script>
+    // 调用接口获取文章分类
+    $.ajax({
+        url: BigNew.category_list,
+        success: function (backData) {
+            console.log(backData);
+            // 调用模板引擎方法
+            var res = template('cateTem', backData);
+            // 渲染到页面上
+            $('#selCategory').html(res);
+        }
+    })
+
+    // 获取文章的列表数据 不做任何的筛选
+    $.ajax({
+        url: BigNew.article_query,
+        data:{
+            // 每页要多少数据
+            perpage:10
+        },
+        success: function (backData) {
+            console.log(backData);
+            var res=template('article',backData);
+            // tbody中
+            $('.article-tbody').html(res);
+        }
+    })
+</script>
+
 </html>
