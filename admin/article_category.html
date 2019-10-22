@@ -52,6 +52,8 @@
         </div>
     </div>
     <!-- 按钮 -->
+
+    <!-- Modal 新增模态框 -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -64,6 +66,7 @@
                 <!-- 内容 -->
                 <div class="modal-body">
                     <form id="form">
+
                         <div class="form-group">
                             <label for="recipient-name" class="control-label">分类名称:</label>
                             <input type="text" class="form-control cate-name" id="recipient-name" name="name">
@@ -78,6 +81,40 @@
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default cancel">取消</button>
                     <button type="button" class="btn btn-primary confirm">确认</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 编辑模态框 -->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <!-- 标题 -->
+                    <h4 class="modal-title" id="exampleModalLabel">编辑分类</h4>
+                </div>
+                <!-- 内容 -->
+                <div class="modal-body">
+                    <form id="form">
+                        <!-- 偷偷的藏一个隐藏域 看不到的文本框 保存数据 防止普通用户 -->
+                        <input type="hidden" name="" class="edit-id">
+                        <div class="form-group">
+                            <label for="recipient-name" class="control-label">分类名称:</label>
+                            <input type="text" class="form-control edit-name" id="recipient-name" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="message-text" class="control-label">分类别名:</label>
+                            <input class="form-control edit-slug" id="message-text" name="slug">
+                        </div>
+                    </form>
+                </div>
+                <!-- 底部 -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default cancel">取消</button>
+                    <button type="button" class="btn btn-success confirm">修改</button>
                 </div>
             </div>
         </div>
@@ -158,6 +195,58 @@
                             getCategoryData();
 
                         }
+                    }
+                })
+            })
+
+            // 点击编辑按钮进入编辑状态
+            $('tbody').on('click', '.btn-info', function () {
+                // 获取id
+                var id = $(this).next().attr('data-id');
+                // ajax获取数据
+                $.ajax({
+                    url: BigNew.category_search,
+                    data: {
+                        id: id
+                    },
+                    success: function (backData) {
+                        console.log(backData);
+                        // 弹出模态框
+                        $('.edit-name').val(backData.data[0].name);
+                        $('.edit-slug').val(backData.data[0].slug);
+                        // 额外保存id
+                        $('.edit-id').val(backData.data[0].id);
+                        // 弹出框
+                        $('#editModal').modal('show');
+
+                    }
+                })
+            })
+
+            // 点击保存
+            $('#editModal .btn-success').click(function(){
+                var id=$('.edit-id').val();
+                var name=$('.edit-name').val();
+                var slug=$('.edit-slug').val();
+                $.ajax({
+                    url:BigNew.category_edit,
+                    type:'post',
+                    data:{
+                        id:id,
+                        name:name,
+                        slug:slug
+                    },
+                    success:function(backData)
+                    {
+                        // console.log(backData);
+                        if(backData.code==200)
+                        {
+                            // 关闭弹框
+                            $('#editModal').modal('hide');
+                            // 重新获取数据
+                            getCategoryData();
+                        }
+                        
                     }
                 })
             })
