@@ -100,7 +100,7 @@
     {{/each}}
 </script>
 <script>
-    // 调用接口获取文章分类
+    // 一、调用接口获取文章分类
     $.ajax({
         url: BigNew.category_list,
         success: function (backData) {
@@ -112,12 +112,12 @@
         }
     })
 
-    // 获取文章的列表数据 不做任何的筛选
+    // 二、获取文章的列表数据 不做任何的筛选
     $.ajax({
         url: BigNew.article_query,
         data:{
             // 每页要多少数据
-            perpage:10
+            // perpage:10
         },
         success: function (backData) {
             console.log(backData);
@@ -125,6 +125,34 @@
             // tbody中
             $('.article-tbody').html(res);
         }
+    })
+    // 三、筛选
+    $('#btnSearch').click(function(e){
+        // 阻止默认行为
+        e.preventDefault();
+        // 获取类型id
+        var type=$('#selCategory').val();
+        // 获取状态
+        var state=$('#selStatus').val();
+        // console.log(id,state);
+
+        // ajax获取传递筛选条件获取数据
+        $.ajax({
+            url:BigNew.article_query,
+            data:{
+                type:type,
+                state:state,
+            },
+            success:function(backData)
+            {
+                console.log(backData);
+                // 调用模板引擎方法
+                var res=template('article',backData);
+                $('.article-tbody').html(res);
+            }
+        })
+        
+
     })
 </script>
 
