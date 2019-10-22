@@ -73,5 +73,27 @@
         </div>
     </div>
 </body>
+<!-- 定义模板 -->
+<script type="text/html" id='cateTem'>
+    <!-- 所有分类就一个 固定的 -->
+    <option value="">所有分类</option>
+    {{each data}}
+    <option value="{{$value.id}}">{{$value.name}}</option>
+    {{/each}}
 
+</script>
+<script>
+// 调用接口获取文章分类
+$.ajax({
+    url:BigNew.category_list,
+    success:function(backData)
+    {
+        console.log(backData);
+        // 调用模板引擎方法
+        var res=template('cateTem',backData);
+        // 渲染到页面上
+        $('#selCategory').html(res);
+    }
+})
+</script>
 </html>
